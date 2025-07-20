@@ -1,6 +1,6 @@
 import { Bell, Mic, ScanQrCode, Search } from "lucide-react-native";
 import React from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Animated, Image, Pressable, Text, View } from "react-native";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -9,9 +9,35 @@ function getGreeting() {
   return "Good evening!";
 }
 
+const placeholderOptions = [
+  "Search doctor...",
+  "Search medicines...",
+  "Health tips...",
+];
+
 const Header = () => {
   const greeting = getGreeting();
   const [search, setSearch] = React.useState("");
+  const [placeholderIndex, setPlaceholderIndex] = React.useState(0);
+  const fadeAnim = React.useRef(new Animated.Value(1)).current;
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }).start(() => {
+        setPlaceholderIndex((prev) => (prev + 1) % placeholderOptions.length);
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true,
+        }).start();
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [fadeAnim]);
 
   return (
     <View className="w-full px-4 pt-6 pb-4 ">
@@ -42,15 +68,13 @@ const Header = () => {
       {/* Search Bar */}
       <View className="flex-row items-center bg-gray-100 rounded-xl px-3 py-2 border border-gray-300" style={{ borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 }}>
         <Search color="#9CA3AF" size={22} />
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search a doctor, medicines, etc..."
-          placeholderTextColor="#9CA3AF"
-          className="flex-1 ml-3 text-base text-gray-800 bg-transparent font-sans"
-          returnKeyType="search"
-        />
-        <Pressable className="ml-2" hitSlop={10}>
+        <View style={{ flex: 1, marginLeft: 12, flexDirection: 'row', alignItems: 'center' }} pointerEvents="none">
+          <Text className="text-base text-gray-400 font-sans">How can I help? </Text>
+          <Animated.Text style={{ opacity: fadeAnim }} className="text-base text-gray-400 font-sans">
+            {placeholderOptions[placeholderIndex]}
+          </Animated.Text>
+        </View>
+        <Pressable className="ml-2 bg-gray-200 p-2 rounded-xl" hitSlop={10}>
           <ScanQrCode color="#4B5563" size={22} />
         </Pressable>
         <Pressable className="ml-2 bg-gray-200 p-2 rounded-xl" hitSlop={10}>

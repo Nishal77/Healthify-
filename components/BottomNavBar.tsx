@@ -1,13 +1,13 @@
-import { FileText, Home, PercentCircle, Settings, ShoppingBag } from "lucide-react-native";
+import { CalendarRange, Home, Archive, User, AlarmClockCheck } from "lucide-react-native";
 import React, { useState } from "react";
 import { Pressable, SafeAreaView, Text, View } from "react-native";
 
 const tabs = [
   { name: "Home", icon: Home },
-  { name: "Pickup", icon: ShoppingBag },
-  { name: "History", icon: FileText },
-  { name: "Sales", icon: PercentCircle },
-  { name: "Settings", icon: Settings },
+  { name: "Routine", icon: AlarmClockCheck },
+  { name: "Appointment", icon: CalendarRange },
+  { name: "Records", icon: Archive },
+  { name: "Profile", icon: User },
 ];
 
 const BottomNavBar = () => {
